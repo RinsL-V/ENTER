@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+#app {
+
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-weight: normal;
+}
+
+html, body {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  background-color: #270000;
+
+}
+
+.main-div {
+  background-color: #000000;
+}
+
+

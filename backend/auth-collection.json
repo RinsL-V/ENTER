@@ -1,0 +1,97 @@
+{
+  "info": {
+    "name": "Auth API (Auto Flow)",
+    "_postman_id": "abcd1234-5678-90ef-ghij-klmnopqrstuv",
+    "description": "Тестирование авторизации с автоподстановкой кода",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Register",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"TestUser\",\n  \"email\": \"test@example.com\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/register", "host": ["{{base_url}}"], "path": ["register"] }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Код будет записан в лог, поэтому мы здесь ничего не сохраняем",
+              "console.log('Проверь laravel.log для кода подтверждения')"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Login (запрос кода)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"test@example.com\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/login", "host": ["{{base_url}}"], "path": ["login"] }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "console.log('Проверь laravel.log — там будет verification_code');",
+              "pm.environment.set('test_email', 'test@example.com');"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Verify (подтверждение кода)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{test_email}}\",\n  \"code\": \"{{test_code}}\"\n}"
+        },
+        "url": { "raw": "{{base_url}}/verify", "host": ["{{base_url}}"], "path": ["verify"] }
+      }
+    },
+    {
+      "name": "Me (текущий пользователь)",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Accept", "value": "application/json" }],
+        "url": { "raw": "{{base_url}}/me", "host": ["{{base_url}}"], "path": ["me"] }
+      }
+    },
+    {
+      "name": "Logout",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Accept", "value": "application/json" }],
+        "url": { "raw": "{{base_url}}/logout", "host": ["{{base_url}}"], "path": ["logout"] }
+      }
+    }
+  ],
+  "variable": [
+    { "key": "base_url", "value": "http://127.0.0.1:8000" },
+    { "key": "test_email", "value": "" },
+    { "key": "test_code", "value": "" }
+  ]
+}
