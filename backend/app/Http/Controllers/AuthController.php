@@ -3,100 +3,105 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\VerificationCode;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\ValidationException;
+use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\VerifyRequest;
+use App\Http\Resources\UserResource;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255|unique:users,name',
-            'email' => 'required|string|email|max:255|unique:users,email',
-        ]);
+        // Данные уже валидированы в RegisterRequest
+        $validated = $request->validated();
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => null,
         ]);
 
-        $this->sendVerificationCode($user);
+        $this->sendVerificationCode($user, $request->ip());
 
         return response()->json([
             'message' => 'Код подтверждения отправлен на почту',
         ]);
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $request->validate([
-            'email' => 'required|string|email|exists:users,email',
-        ]);
+        // Данные уже валидированы в LoginRequest
+        $validated = $request->validated();
 
-        $user = User::where('email', $request->email)->first();
-        $this->sendVerificationCode($user);
+        $user = User::where('email', $validated['email'])->first();
+
+        // Проверки блокировки и лимитов теперь в LoginRequest
+        $this->sendVerificationCode($user, $request->ip());
 
         return response()->json([
             'message' => 'Код подтверждения отправлен на почту',
         ]);
     }
 
-    public function verify(Request $request)
+    public function verify(VerifyRequest $request)
     {
-        $request->validate([
-            'email' => 'required|string|email|exists:users,email',
-            'code' => 'required|digits:6',
-        ]);
+        // Данные уже валидированы в VerifyRequest
+        $validated = $request->validated();
 
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('email', $validated['email'])->first();
+        $code = VerificationCode::where('user_id', $user->id)
+            ->where('code', $validated['code'])
+            ->where('used', false)
+            ->latest()
+            ->first();
 
-        if (!$user->verification_code || $user->verification_code !== $request->code) {
+        if (!$code || !$code->isValid()) {
             throw ValidationException::withMessages([
-                'code' => ['Неверный код подтверждения'],
+                'code' => ['Неверный или просроченный код подтверждения'],
             ]);
         }
 
-        if (now()->greaterThan($user->verification_expires_at)) {
-            throw ValidationException::withMessages([
-                'code' => ['Код подтверждения истёк'],
-            ]);
-        }
+        $code->markAsUsed();
+        $user->markEmailAsVerified();
 
-        $user->verification_code = null;
-        $user->verification_expires_at = null;
-        $user->email_verified_at = $user->email_verified_at ?? now();
-        $user->save();
+        // Удаляем старые токены и создаем новый
+        $user->tokens()->delete();
+        $token = $user->createToken($request->email)->plainTextToken;
 
-        Auth::login($user);
-
+        // Возвращаем пользователя с токеном через Resource
         return response()->json([
             'message' => 'Успешная авторизация',
-            'user' => $user,
+            'data' => new UserResource($user->setAttribute('token', $token)),
         ]);
     }
 
     public function logout(Request $request)
     {
-        Auth::guard('web')->logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        $request->user()->currentAccessToken()->delete();
 
         return response()->json(['message' => 'Выход выполнен']);
     }
 
     public function me(Request $request)
     {
-        return response()->json(Auth::user());
+        // Возвращаем пользователя без токена через Resource
+        return new UserResource($request->user());
     }
 
-    private function sendVerificationCode(User $user)
+    private function sendVerificationCode(User $user, string $ipAddress)
     {
         $code = rand(100000, 999999);
-        $user->verification_code = $code;
-        $user->verification_expires_at = now()->addMinutes(10);
-        $user->save();
+
+        VerificationCode::create([
+            'user_id' => $user->id,
+            'code' => $code,
+            'expires_at' => now()->addMinutes(10),
+            'ip_address' => $ipAddress,
+        ]);
 
         Mail::raw("Ваш код подтверждения: {$code}", function ($message) use ($user) {
             $message->to($user->email)->subject('Код подтверждения');
