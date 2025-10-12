@@ -1,27 +1,40 @@
 <template>
-  <header class="flex justify-between border-yellow-50 border-b px-10 py-8">
+  <header class="flex justify-between border-yellow-50 border-b px-10 py-5">
     <div class="flex items-center gap-4">
-      <h2 class="text-xl">ART OF BEING A WOMAN</h2>
+      <h2 class="text-xl cursor-pointer" @click="goHome">ENTER</h2>
     </div>
 
-    <ul class="flex items-center gap-10">      
+    <ul class="flex items-center gap-10 text-amber-50">      
       <li class="flex items-center gap-3 cursor-pointer">
-        <img src="/src/assets/favorite.svg" alt="like" width="25em" class="hover:filter hover:brightness-0 hover:saturate-0 hover:hue-rotate-60 hover:invert">
+        <a>каталог</a>
       </li>
 
       <li class="flex items-center gap-3 cursor-pointer" @click="$emit('open-cart')">
-        <img src="/src/assets/cart.svg" alt="cart" width="25em" class="hover:filter hover:brightness-0 hover:saturate-0 hover:hue-rotate-60 hover:invert">
+        <p>корзина</p>
       </li>
 
       <li class="flex items-center gap-3 cursor-pointer" @click="$emit('open-profile')">
-        <img src="/src/assets/profile.svg" alt="profile" width="25em" class="hover:filter hover:brightness-0 hover:saturate-0 hover:hue-rotate-60 hover:invert">
+        <p>профиль</p>
       </li>
     </ul>
   </header>
 </template>
 
 <script setup>
-defineEmits(['open-cart', 'open-profile'])
+defineProps({
+  showBackButton: {
+    type: Boolean,
+    default: false
+  }
+})
+
+defineEmits(['open-cart', 'open-profile', 'back'])
+
+const goHome = () => {
+  if (window.location.hash !== '#main') {
+    window.location.hash = 'main'
+  }
+}
 </script>
 
 <style scoped>

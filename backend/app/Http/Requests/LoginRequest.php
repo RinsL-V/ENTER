@@ -6,22 +6,25 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class LoginRequest extends FormRequest
 {
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
-            'email' => 'required|email|exists:users,email',
+            'email' => 'required|email',
+            'password' => 'required|string',
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
-            'email.exists' => 'Пользователь с таким email не найден',
+            'email.required' => 'Email обязателен для заполнения',
+            'email.email' => 'Введите корректный email',
+            'password.required' => 'Пароль обязателен для заполнения',
         ];
     }
 }

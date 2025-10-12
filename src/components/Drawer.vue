@@ -1,95 +1,56 @@
 <template>
-  <div>
-    <!-- Overlay -->
-    <div 
-      v-if="isOpen"
-     class="fixed top-0 left-0 h-full w-full bg-black z-10 opacity-70" 
-      @click="closeDrawer"
-    ></div>
+  <div v-if="isVisible" class="fixed inset-0 z-50">
+    <!-- Overlay с размытием -->
+    <div class="absolute inset-0 drawer-overlay" @click="$emit('close')"></div>
     
-    <!-- Drawer -->
-    <div 
-      class="fixed top-0 right-0 h-full w-96 bg-white z-50 transform transition-transform duration-300 ease-in-out"
-      :class="isOpen ? 'translate-x-0' : 'translate-x-full'"
-    >
+    <!-- Drawer content -->
+    <div class="absolute right-0 top-0 h-full w-96 bg-black border-l border-amber-50 shadow-xl">
       <div class="h-full flex flex-col">
-        <!-- Header -->
-        <div class="flex justify-between items-center p-6 border-b border-gray-200">
-          <h2 class="text-2xl font-bold text-gray-900">
-            {{ title }}
-          </h2>
-          <button 
-            @click="closeDrawer"
-            class="text-gray-400 hover:text-gray-600 transition p-2 rounded-full hover:bg-gray-100"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+        <!-- Заголовок -->
+        <div class="p-6 border-b border-amber-50">
+          <div class="flex justify-between items-center">
+            <h2 class="text-2xl font-mono text-amber-50">Корзина</h2>
+            <button @click="$emit('close')" class="text-amber-50 hover:text-amber-100">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
         </div>
 
-        <!-- Content -->
-        <div class="flex-1 overflow-y-auto p-6">
-          <component :is="currentContent" />
+        <!-- Контент в зависимости от типа -->
+        <div v-if="type === 'cart'" class="flex-1 overflow-hidden">
+          <CartContent @open-payment-methods="handleOpenPaymentMethods" />
         </div>
       </div>
     </div>
   </div>
 </template>
 
-
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { computed } from 'vue'
 import CartContent from './CartContent.vue'
-import ProfileContent from './ProfileContent.vue'
 
 const props = defineProps({
-  type: {
-    type: String,
-    default: null,
-    validator: (value) => ['cart', 'profile', null].includes(value)
-  }
+  type: String
 })
 
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close', 'open-payment-methods'])
 
-const isOpen = computed(() => props.type !== null)
-
-const contentComponents = {
-  cart: CartContent,
-  profile: ProfileContent
-}
-
-const currentContent = computed(() => {
-  return props.type ? contentComponents[props.type] : null
+const isVisible = computed(() => {
+  return props.type !== null
 })
 
-const title = computed(() => {
-  const titles = {
-    cart: 'Корзина',
-    profile: 'Профиль'
-  }
-  return props.type ? titles[props.type] : ''
-})
-
-const closeDrawer = () => {
+const handleOpenPaymentMethods = () => {
+  // Закрываем корзину и открываем профиль
   emit('close')
+  emit('open-payment-methods')
 }
-
-// Закрытие по ESC
-const handleEscape = (event) => {
-  if (event.key === 'Escape' && isOpen.value) {
-    closeDrawer()
-  }
-}
-
-watch(isOpen, (newVal) => {
-  if (newVal) {
-    document.addEventListener('keydown', handleEscape)
-    document.body.style.overflow = 'hidden'
-  } else {
-    document.removeEventListener('keydown', handleEscape)
-    document.body.style.overflow = 'auto'
-  }
-})
 </script>
+
+<style scoped>
+.drawer-overlay {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+}
+</style>
