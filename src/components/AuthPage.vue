@@ -4,28 +4,28 @@
       <!-- Авторизация -->
       <div
         v-if="currentForm === 'login'"
-        class="border border-amber-50 rounded-lg p-8 bg-black bg-opacity-80 backdrop-blur-sm"
+        class="border border-gray-500/50 rounded-lg p-8 bg-black/20 backdrop-blur-lg shadow-2xl"
       >
-        <h2 class="text-2xl font-mono text-amber-50 mb-6 text-center">Авторизация</h2>
+        <h2 class="text-2xl font-mono text-gray-100 mb-6 text-center">Авторизация</h2>
 
         <form @submit.prevent="handleLogin" class="space-y-4">
           <div>
-            <label class="block text-amber-100 text-sm mb-2">Email</label>
+            <label class="block text-gray-100 text-sm mb-2">Email</label>
             <input
               v-model="loginForm.email"
               type="email"
-              class="w-full border border-amber-50 text-amber-50 rounded-md py-2 px-4 bg-transparent outline-none focus:border-amber-100"
+              class="w-full border border-gray-500/60 text-gray-300 rounded-md py-2 px-4 bg-black/30 backdrop-blur-sm outline-none focus:border-gray-400 focus:bg-black/40 transition-all duration-300 placeholder-gray-500"
               placeholder="Введите email"
               required
             />
           </div>
 
           <div>
-            <label class="block text-amber-100 text-sm mb-2">Пароль</label>
+            <label class="block text-gray-100 text-sm mb-2">Пароль</label>
             <input
               v-model="loginForm.password"
               type="password"
-              class="w-full border border-amber-50 text-amber-50 rounded-md py-2 px-4 bg-transparent outline-none focus:border-amber-100"
+              class="w-full border border-gray-500/60 text-gray-300 rounded-md py-2 px-4 bg-black/30 backdrop-blur-sm outline-none focus:border-gray-400 focus:bg-black/40 transition-all duration-300 placeholder-gray-500"
               placeholder="Введите пароль"
               required
             />
@@ -34,7 +34,7 @@
           <button
             type="submit"
             :disabled="loading"
-            class="w-full bg-amber-500 text-black font-semibold py-3 rounded-lg hover:bg-amber-400 transition-colors disabled:bg-amber-300 disabled:cursor-not-allowed"
+            class="w-full bg-white text-black font-semibold py-3 rounded-lg hover:bg-gray-200 transition-all duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed backdrop-blur-sm"
           >
             <span v-if="loading">Вход...</span>
             <span v-else>Войти</span>
@@ -43,8 +43,8 @@
 
         <div class="mt-6 text-center">
           <button
-            @click="currentForm = 'register'"
-            class="text-amber-50 hover:text-amber-100 underline transition-colors"
+            @click="switchToRegister"
+            class="text-gray-400 hover:text-gray-300 underline transition-colors duration-300"
           >
             Зарегистрироваться
           </button>
@@ -54,50 +54,50 @@
       <!-- Регистрация -->
       <div
         v-else
-        class="border border-amber-50 rounded-lg p-8 bg-black bg-opacity-80 backdrop-blur-sm"
+        class="border border-gray-500/50 rounded-lg p-8 bg-black/20 backdrop-blur-lg shadow-2xl"
       >
-        <h2 class="text-2xl font-mono text-amber-50 mb-6 text-center">Регистрация</h2>
+        <h2 class="text-2xl font-mono text-gray-100 mb-6 text-center">Регистрация</h2>
 
         <form @submit.prevent="handleRegister" class="space-y-4">
           <div>
-            <label class="block text-amber-100 text-sm mb-2">Имя пользователя</label>
+            <label class="block text-gray-100 text-sm mb-2">Имя пользователя</label>
             <input
               v-model="registerForm.name"
               type="text"
-              class="w-full border border-amber-50 text-amber-50 rounded-md py-2 px-4 bg-transparent outline-none focus:border-amber-100"
+              class="w-full border border-gray-500/60 text-gray-300 rounded-md py-2 px-4 bg-black/30 backdrop-blur-sm outline-none focus:border-gray-400 focus:bg-black/40 transition-all duration-300 placeholder-gray-500"
               placeholder="Введите имя пользователя"
               required
             />
           </div>
 
           <div>
-            <label class="block text-amber-100 text-sm mb-2">Email</label>
+            <label class="block text-gray-100 text-sm mb-2">Email</label>
             <input
               v-model="registerForm.email"
               type="email"
-              class="w-full border border-amber-50 text-amber-50 rounded-md py-2 px-4 bg-transparent outline-none focus:border-amber-100"
+              class="w-full border border-gray-500/60 text-gray-300 rounded-md py-2 px-4 bg-black/30 backdrop-blur-sm outline-none focus:border-gray-400 focus:bg-black/40 transition-all duration-300 placeholder-gray-500"
               placeholder="Введите email"
               required
             />
           </div>
 
           <div>
-            <label class="block text-amber-100 text-sm mb-2">Пароль</label>
+            <label class="block text-gray-100 text-sm mb-2">Пароль</label>
             <input
               v-model="registerForm.password"
               type="password"
-              class="w-full border border-amber-50 text-amber-50 rounded-md py-2 px-4 bg-transparent outline-none focus:border-amber-100"
+              class="w-full border border-gray-500/60 text-gray-300 rounded-md py-2 px-4 bg-black/30 backdrop-blur-sm outline-none focus:border-gray-400 focus:bg-black/40 transition-all duration-300 placeholder-gray-500"
               placeholder="Введите пароль"
               required
             />
           </div>
 
           <div>
-            <label class="block text-amber-100 text-sm mb-2">Подтвердите пароль</label>
+            <label class="block text-gray-100 text-sm mb-2">Подтвердите пароль</label>
             <input
               v-model="registerForm.password_confirmation"
               type="password"
-              class="w-full border border-amber-50 text-amber-50 rounded-md py-2 px-4 bg-transparent outline-none focus:border-amber-100"
+              class="w-full border border-gray-500/60 text-gray-300 rounded-md py-2 px-4 bg-black/30 backdrop-blur-sm outline-none focus:border-gray-400 focus:bg-black/40 transition-all duration-300 placeholder-gray-500"
               placeholder="Подтвердите пароль"
               required
             />
@@ -106,7 +106,7 @@
           <button
             type="submit"
             :disabled="loading"
-            class="w-full bg-amber-500 text-black font-semibold py-3 rounded-lg hover:bg-amber-400 transition-colors disabled:bg-amber-300 disabled:cursor-not-allowed"
+            class="w-full bg-white text-black font-semibold py-3 rounded-lg hover:bg-gray-200 transition-all duration-300 disabled:bg-gray-400 disabled:cursor-not-allowed backdrop-blur-sm"
           >
             <span v-if="loading">Регистрация...</span>
             <span v-else>Зарегистрироваться</span>
@@ -115,8 +115,8 @@
 
         <div class="mt-6 text-center">
           <button
-            @click="currentForm = 'login'"
-            class="text-amber-50 hover:text-amber-100 underline transition-colors"
+            @click="switchToLogin"
+            class="text-gray-400 hover:text-gray-300 underline transition-colors duration-300"
           >
             Авторизоваться
           </button>
@@ -169,7 +169,6 @@ const handleLogin = async () => {
     console.log('Данные ответа:', data)
 
     if (!response.ok) {
-      // Детальная обработка ошибок
       if (response.status === 401) {
         throw new Error('Неверный email или пароль')
       } else if (response.status === 422) {
@@ -194,7 +193,6 @@ const handleLogin = async () => {
   } catch (error) {
     console.error('Ошибка авторизации:', error)
     
-    // Более информативные алерты
     if (error.message.includes('Failed to fetch') || error.message.includes('Network')) {
       alert('Ошибка сети. Проверьте подключение к интернету и запущен ли сервер.')
     } else {
@@ -208,9 +206,8 @@ const handleLogin = async () => {
 const handleRegister = async () => {
   loading.value = true
   try {
-    console.log('🔄 Начинаем регистрацию...', registerForm)
+    console.log('Начинаем регистрацию...', registerForm)
 
-    // Проверка совпадения паролей на фронтенде
     if (registerForm.password !== registerForm.password_confirmation) {
       throw new Error('Пароли не совпадают')
     }
@@ -224,7 +221,7 @@ const handleRegister = async () => {
       body: JSON.stringify(registerForm)
     })
 
-    console.log('📨 Ответ сервера:', {
+    console.log('Ответ сервера:', {
       status: response.status,
       statusText: response.statusText,
       ok: response.ok
@@ -234,7 +231,6 @@ const handleRegister = async () => {
     console.log('Данные ответа:', data)
 
     if (!response.ok) {
-      // Детальная обработка ошибок валидации
       if (response.status === 422) {
         const errorMessages = data.errors ? Object.values(data.errors).flat().join('\n') : data.message
         throw new Error(errorMessages)
@@ -260,7 +256,6 @@ const handleRegister = async () => {
     if (error.message.includes('Failed to fetch') || error.message.includes('Network')) {
       alert('Ошибка сети. Проверьте подключение к интернету и запущен ли сервер.')
     } else {
-      // Для ошибок валидации показываем каждую с новой строки
       const errorMessage = error.message.includes('\n') 
         ? 'Ошибки:\n' + error.message 
         : error.message
@@ -271,10 +266,8 @@ const handleRegister = async () => {
   }
 }
 
-// Очистка форм при переключении
 const switchToLogin = () => {
   currentForm.value = 'login'
-  // Очищаем форму регистрации
   registerForm.name = ''
   registerForm.email = ''
   registerForm.password = ''
@@ -283,7 +276,6 @@ const switchToLogin = () => {
 
 const switchToRegister = () => {
   currentForm.value = 'register'
-  // Очищаем форму логина
   loginForm.email = ''
   loginForm.password = ''
 }

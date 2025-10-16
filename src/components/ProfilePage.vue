@@ -46,7 +46,6 @@ const loadUserData = async () => {
     const token = localStorage.getItem('auth_token')
     
     if (!token) {
-      // Простое перенаправление без vue-router
       window.location.href = '/login'
       return
     }

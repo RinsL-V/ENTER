@@ -5,9 +5,8 @@
 </template>
 
 <script setup>
-  import CartItem from './CartItem.vue';
+import CartItem from './CartItem.vue';
 </script>
 
 <style lang="scss" scoped>
-
 </style>

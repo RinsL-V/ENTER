@@ -4,17 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Chapter extends Model
+class OrderItem extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'title',
-        'description',
+        'order_id',
+        'chapter_id',
         'price',
-        'content'
+        'quantity'
     ];
 
     protected $casts = [
@@ -23,8 +23,13 @@ class Chapter extends Model
         'updated_at' => 'datetime'
     ];
 
-    public function orderItems(): HasMany
+    public function order(): BelongsTo
     {
-        return $this->hasMany(OrderItem::class);
+        return $this->belongsTo(Order::class);
+    }
+
+    public function chapter(): BelongsTo
+    {
+        return $this->belongsTo(Chapter::class);
     }
 }

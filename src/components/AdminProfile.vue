@@ -5,14 +5,14 @@
       <!-- Левая колонка - Меню админа -->
       <div class="lg:col-span-1">
         <!-- Блок пользователя -->
-        <div class="border border-amber-50 rounded-lg p-6 mb-6">
+        <div class="border border-gray-500/50 rounded-lg p-6 mb-6 bg-black/20 backdrop-blur-lg shadow-2xl">
           <div class="flex items-center mb-4">
-            <div class="w-20 h-20 bg-amber-100 flex items-center justify-center mr-4 border border-amber-200">
-              <span class="text-lg font-bold text-amber-600">{{ userInitials }}</span>
+            <div class="w-20 h-20 bg-gray-400/30 backdrop-blur-sm flex items-center justify-center mr-4 border border-gray-500/50 rounded-lg">
+              <span class="text-lg font-bold text-gray-100">{{ userInitials }}</span>
             </div>
             <div>
-              <h3 class="text-lg font-semibold text-amber-50">{{ user.name }}</h3>
-              <p class="text-amber-100 text-sm">{{ user.email }}</p>
+              <h3 class="text-lg font-semibold text-gray-100">{{ user.name }}</h3>
+              <p class="text-gray-300 text-sm">{{ user.email }}</p>
             </div>
           </div>
         </div>
