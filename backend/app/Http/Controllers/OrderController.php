@@ -22,21 +22,18 @@ class OrderController extends Controller
         $user = Auth::user();
         $items = $request->items;
 
-        // Рассчитываем общую сумму
         $totalAmount = 0;
         foreach ($items as $item) {
             $chapter = Chapter::findOrFail($item['chapter_id']);
             $totalAmount += $chapter->price * $item['quantity'];
         }
 
-        // Создаем заказ
         $order = Order::create([
             'user_id' => $user->id,
             'status' => 'pending',
             'total_amount' => $totalAmount
         ]);
 
-        // Добавляем товары в заказ
         foreach ($items as $item) {
             $chapter = Chapter::findOrFail($item['chapter_id']);
             OrderItem::create([
@@ -55,8 +52,7 @@ class OrderController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        // Для админа: все заказы на модерации
-        // Измененная проверка - используем поле роли напрямую
+
         if ($request->user()->role !== 'admin') {
             return response()->json(['message' => 'Доступ запрещен'], 403);
         }
@@ -117,7 +113,6 @@ class OrderController extends Controller
     {
         $order = Order::with(['user', 'items.chapter'])->findOrFail($id);
 
-        // Проверяем права доступа
         if (Auth::user()->id !== $order->user_id && Auth::user()->role !== 'admin') {
             return response()->json(['message' => 'Доступ запрещен'], 403);
         }

@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
-use App\Http\Requests\LoginRequest; // Добавляем импорт
+use App\Http\Requests\LoginRequest;
 
 class AuthController extends Controller
 {
