@@ -58,7 +58,6 @@ class OrderController extends Controller
         }
 
         $orders = Order::with(['user', 'items.chapter'])
-            ->where('status', 'pending')
             ->latest()
             ->get();
 
