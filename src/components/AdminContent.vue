@@ -1,5 +1,5 @@
 <template>
-  <div v-if="activeSection === 'payments'" class="border border-gray-500/50 rounded-lg p-6 bg-black/20 backdrop-blur-lg shadow-2xl">
+  <div v-if="activeSection === 'orders'" class="border border-gray-500/50 rounded-lg p-6 bg-black/20 backdrop-blur-lg shadow-2xl">
     <!-- Уведомления -->
     <div class="fixed top-4 right-4 z-50 space-y-2">
       <div 
@@ -26,7 +26,7 @@
             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
           </svg>
           <svg v-else-if="notification.type === 'error'" class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414-1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414 1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
           </svg>
           <svg v-else-if="notification.type === 'warning'" class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
@@ -184,9 +184,15 @@
       </button>
     </div>
   </div>
+
+  <!-- Заглушка для остальных разделов -->
+  <div v-else class="border border-gray-500/50 rounded-lg p-6 bg-black/20 backdrop-blur-lg shadow-2xl text-center">
+    <p class="text-gray-300">Раздел находится в разработке</p>
+  </div>
 </template>
 
 <script setup>
+import { API_BASE_URL } from '../api.js'
 import { ref, computed, onMounted, watch } from 'vue'
 
 const props = defineProps({
@@ -204,7 +210,7 @@ const notifications = ref([])
 let notificationId = 0
 
 // Базовый URL API
-const API_BASE_URL = 'http://localhost:8000/api'
+
 
 // Система уведомлений
 const showNotification = (message, type = 'info') => {
@@ -381,13 +387,13 @@ const formatDate = (date) => {
 
 // Следим за изменением активной секции и загружаем заказы при необходимости
 watch(() => props.activeSection, (newSection) => {
-  if (newSection === 'payments') {
+  if (newSection === 'orders') {
     loadOrders()
   }
 })
 
 onMounted(() => {
-  if (props.activeSection === 'payments') {
+  if (props.activeSection === 'orders') {
     loadOrders()
   }
 })

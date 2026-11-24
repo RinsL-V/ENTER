@@ -86,6 +86,7 @@
 </template>
 
 <script setup>
+import { API_BASE_URL } from '../api.js'
 import { ref, computed, onMounted } from 'vue'
 
 const emit = defineEmits(['open-payment-methods', 'order-created'])
@@ -95,7 +96,7 @@ const selectedPaymentMethod = ref('card')
 const cartItems = ref([])
 
 // Базовый URL API
-const API_BASE_URL = 'http://localhost:8000/api'
+
 
 // Загрузка корзины из localStorage
 const loadCart = () => {
