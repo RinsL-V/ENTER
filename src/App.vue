@@ -110,7 +110,7 @@
 
       <!-- Страница профиля -->
       <div v-else-if="currentPage === 'profile'" class="flex-1">
-        <ProfilePage @logout="handleLogout" />
+        <ProfilePage @logout="handleLogout" @open-auth="showAuthPage" />
       </div>
 
       <!-- Детальная страница главы -->
@@ -129,6 +129,7 @@
 </template>
 
 <script setup>
+import { API_BASE_URL } from './api.js'
 import { ref, onMounted } from 'vue'
 import Header from './components/Header.vue'
 import CatalogPage from './components/CatalogPage.vue'
@@ -153,7 +154,7 @@ const fetchUser = async () => {
       return
     }
 
-    const response = await fetch('http://localhost:8000/api/me', {
+    const response = await fetch(`${API_BASE_URL}/me`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -237,7 +238,7 @@ const handleLogout = async () => {
   try {
     const token = localStorage.getItem('auth_token')
     
-    const response = await fetch('http://localhost:8000/api/logout', {
+    const response = await fetch(`${API_BASE_URL}/logout`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,

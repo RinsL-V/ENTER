@@ -127,6 +127,7 @@
 </template>
 
 <script setup>
+import { API_BASE_URL } from '../api.js'
 import { ref, reactive } from 'vue'
 
 const emit = defineEmits(['login-success'])
@@ -150,7 +151,7 @@ const handleLogin = async () => {
   try {
     console.log('Начинаем авторизацию...', loginForm)
 
-    const response = await fetch('http://localhost:8000/api/login', {
+    const response = await fetch(`${API_BASE_URL}/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -212,7 +213,7 @@ const handleRegister = async () => {
       throw new Error('Пароли не совпадают')
     }
 
-    const response = await fetch('http://localhost:8000/api/register', {
+    const response = await fetch(`${API_BASE_URL}/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

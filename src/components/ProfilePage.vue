@@ -13,13 +13,15 @@
     
     <div v-else-if="user && user.role === 'admin'">
       <AdminProfile 
-        :user="user" 
+        :user="user"
+        @logout-success="emit('logout')"
       />
     </div>
     
     <div v-else-if="user">
       <UserProfile 
-        :user="user" 
+        :user="user"
+        @logout-success="emit('logout')"
       />
     </div>
     
@@ -30,9 +32,12 @@
 </template>
 
 <script setup>
+import { API_BASE_URL } from '../api.js'
 import { ref, onMounted } from 'vue'
 import AdminProfile from './AdminProfile.vue'
 import UserProfile from './UserProfile.vue'
+
+const emit = defineEmits(['logout', 'open-auth'])
 
 const user = ref(null)
 const loading = ref(true)
@@ -46,11 +51,11 @@ const loadUserData = async () => {
     const token = localStorage.getItem('auth_token')
     
     if (!token) {
-      window.location.href = '/login'
+      emit('open-auth')
       return
     }
 
-    const response = await fetch('http://localhost:8000/api/me', {
+    const response = await fetch(`${API_BASE_URL}/me`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -66,7 +71,7 @@ const loadUserData = async () => {
     if (!response.ok) {
       if (response.status === 401) {
         localStorage.removeItem('auth_token')
-        window.location.href = '/login'
+        emit('open-auth')
         return
       }
       throw new Error(`HTTP error! status: ${response.status}`)
@@ -89,7 +94,7 @@ const loadUserData = async () => {
     // Если ошибка сети или сервера, очищаем токен
     if (err.message.includes('Failed to fetch') || err.message.includes('Network')) {
       localStorage.removeItem('auth_token')
-      window.location.href = '/login'
+      emit('open-auth')
     }
   } finally {
     loading.value = false
