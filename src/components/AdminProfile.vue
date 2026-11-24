@@ -37,6 +37,7 @@
 </template>
 
 <script setup>
+import { API_BASE_URL } from '../api.js'
 import { ref, computed } from 'vue'
 import AdminMenu from './AdminMenu.vue'
 import AdminContent from './AdminContent.vue'
@@ -51,7 +52,7 @@ const props = defineProps({
 const emit = defineEmits(['logout-success'])
 
 // Активный раздел
-const activeSection = ref('stats')
+const activeSection = ref('orders')
 
 // Вычисляемые свойства
 const userInitials = computed(() => {
@@ -76,7 +77,7 @@ const logout = async () => {
     }
 
     // Отправляем запрос на сервер для выхода
-    const response = await fetch('http://localhost:8000/api/logout', {
+    const response = await fetch(`${API_BASE_URL}/logout`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -109,8 +110,5 @@ const handleLogoutSuccess = () => {
   
   // Эмитируем событие для родительского компонента
   emit('logout-success')
-  
-  // Перенаправляем на страницу входа
-  window.location.href = '/login'
 }
 </script>

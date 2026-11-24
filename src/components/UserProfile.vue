@@ -133,6 +133,7 @@
 </template>
 
 <script setup>
+import { API_BASE_URL } from '../api.js'
 import { computed, ref, onMounted } from 'vue'
 
 const props = defineProps({
@@ -148,7 +149,7 @@ const loading = ref(false)
 const allOrders = ref([])
 
 // Базовый URL API
-const API_BASE_URL = 'http://localhost:8000/api'
+
 
 // Загрузка заказов пользователя
 const loadUserOrders = async () => {
@@ -237,7 +238,6 @@ const handleLogoutSuccess = () => {
   localStorage.removeItem('auth_token')
   localStorage.removeItem('user_data')
   emit('logout-success')
-  window.location.href = '/login'
 }
 
 const deleteAccount = () => {

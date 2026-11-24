@@ -30,7 +30,7 @@
             @click="handleSectionChange('orders')"
             :class="activeSection === 'orders' ? 'bg-white/10 text-white' : 'text-gray-300 hover:text-white'"
             class="w-full text-left py-0.5 flex items-center text-sm px-3 rounded transition-colors duration-300 hover:bg-white/5">
-            Заказы
+            Управление заказами
           </button>
           <button 
             @click="handleSectionChange('payments')"
