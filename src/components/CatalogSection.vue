@@ -77,13 +77,14 @@
 </template>
 
 <script setup>
+import { API_BASE_URL } from '../api.js'
 import { ref, computed, onMounted } from 'vue'
 
 // Emits
 const emit = defineEmits(['search', 'open-chapter'])
 
 // Базовый URL API
-const API_BASE_URL = 'http://localhost:8000/api'
+
 
 // Local state
 const searchQuery = ref('')
